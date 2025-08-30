@@ -17,17 +17,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <AppProvider>
-          <div className="min-h-screen bg-gray-50">
-            <Navigation />
-            <main className="pb-16 md:pb-0">
-              {children}
-            </main>
-          </div>
-        </AppProvider>
-      </body>
-    </html>
+      <html lang="en">
+        <head>
+          <link rel="icon" href="/favicon.png" type="image/png" />
+        </head>
+        <body className={inter.className}>
+          <AppProvider>
+            <div className="min-h-screen bg-gray-50">
+              <Navigation />
+              <main className="pb-16 md:pb-0">
+                {children}
+              </main>
+            </div>
+          </AppProvider>
+        </body>
+      </html>
   );
 }
