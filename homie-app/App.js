@@ -1,8 +1,11 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+// Import context
+import { AppProvider } from './src/utils/AppContext';
 
 // Import screens
 import HomeScreen from './src/screens/HomeScreen';
@@ -12,67 +15,66 @@ import PostListingScreen from './src/screens/PostListingScreen';
 
 const Tab = createBottomTabNavigator();
 
-export default function App() {
+function AppContent() {
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <Tab.Navigator
-          screenOptions={{
-            tabBarActiveTintColor: '#007AFF',
-            tabBarInactiveTintColor: 'gray',
-            headerStyle: {
-              backgroundColor: '#007AFF',
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            },
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarActiveTintColor: '#007AFF',
+          tabBarInactiveTintColor: 'gray',
+          headerStyle: {
+            backgroundColor: '#007AFF',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+      >
+        <Tab.Screen 
+          name="Search" 
+          component={HomeScreen}
+          options={{
+            tabBarLabel: 'Search',
+            title: 'Find Your Home'
           }}
-        >
-          <Tab.Screen 
-            name="Search" 
-            component={HomeScreen}
-            options={{
-              tabBarLabel: 'Search',
-              title: 'Find Your Home'
-            }}
-          />
-          <Tab.Screen 
-            name="Map" 
-            component={MapScreen}
-            options={{
-              tabBarLabel: 'Map',
-              title: 'Map View'
-            }}
-          />
-          <Tab.Screen 
-            name="Saved" 
-            component={SavedScreen}
-            options={{
-              tabBarLabel: 'Saved',
-              title: 'Saved Listings'
-            }}
-          />
-          <Tab.Screen 
-            name="Post" 
-            component={PostListingScreen}
-            options={{
-              tabBarLabel: 'Post',
-              title: 'Post Listing'
-            }}
-          />
-        </Tab.Navigator>
-        <StatusBar style="light" />
-      </NavigationContainer>
-    </SafeAreaProvider>
+        />
+        <Tab.Screen 
+          name="Map" 
+          component={MapScreen}
+          options={{
+            tabBarLabel: 'Map',
+            title: 'Map View'
+          }}
+        />
+        <Tab.Screen 
+          name="Saved" 
+          component={SavedScreen}
+          options={{
+            tabBarLabel: 'Saved',
+            title: 'Saved Listings'
+          }}
+        />
+        <Tab.Screen 
+          name="Post" 
+          component={PostListingScreen}
+          options={{
+            tabBarLabel: 'Post',
+            title: 'Post Listing'
+          }}
+        />
+      </Tab.Navigator>
+      <StatusBar style="light" />
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+  return (
+    <SafeAreaProvider>
+      <AppProvider>
+        <AppContent />
+      </AppProvider>
+    </SafeAreaProvider>
+  );
+}
