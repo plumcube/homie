@@ -8,9 +8,14 @@ import Image from 'next/image';
 export default function MapPage() {
   const { state, dispatch } = useApp();
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
 
   const toggleSaved = (listingId: string) => {
     dispatch({ type: 'TOGGLE_SAVED_LISTING', payload: listingId });
+  };
+
+  const handleImageError = (listingId: string) => {
+    setImageErrors(prev => ({ ...prev, [listingId]: true }));
   };
 
   return (
@@ -53,13 +58,23 @@ export default function MapPage() {
               className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer overflow-hidden"
               onClick={() => setSelectedListing(listing)}
             >
-              <Image
-                src={listing.images[0]}
-                alt={listing.title}
-                width={300}
-                height={200}
-                className="w-full h-32 object-cover"
-              />
+              {!imageErrors[listing.id] ? (
+                <Image
+                  src={listing.images[0]}
+                  alt={listing.title}
+                  width={300}
+                  height={200}
+                  className="w-full h-32 object-cover"
+                  onError={() => handleImageError(listing.id)}
+                />
+              ) : (
+                <div className="w-full h-32 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+                  <div className="text-center text-blue-600">
+                    <div className="text-2xl mb-1">🏠</div>
+                    <div className="text-xs">Property</div>
+                  </div>
+                </div>
+              )}
               <div className="p-3">
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="font-bold text-sm truncate flex-1">{listing.title}</h3>
@@ -93,13 +108,23 @@ export default function MapPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="relative">
-              <Image
-                src={selectedListing.images[0]}
-                alt={selectedListing.title}
-                width={600}
-                height={300}
-                className="w-full h-64 object-cover rounded-t-lg"
-              />
+              {!imageErrors[selectedListing.id] ? (
+                <Image
+                  src={selectedListing.images[0]}
+                  alt={selectedListing.title}
+                  width={600}
+                  height={300}
+                  className="w-full h-64 object-cover rounded-t-lg"
+                  onError={() => handleImageError(selectedListing.id)}
+                />
+              ) : (
+                <div className="w-full h-64 bg-gradient-to-br from-blue-100 to-blue-200 rounded-t-lg flex items-center justify-center">
+                  <div className="text-center text-blue-600">
+                    <div className="text-6xl mb-4">🏠</div>
+                    <div className="text-lg font-medium">Property Image</div>
+                  </div>
+                </div>
+              )}
               <button
                 onClick={() => setSelectedListing(null)}
                 className="absolute top-4 right-4 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100"

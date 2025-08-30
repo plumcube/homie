@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { Listing } from '../data/listings';
 import { useApp } from '../context/AppContext';
@@ -12,6 +12,7 @@ interface ListingCardProps {
 
 export default function ListingCard({ listing, onPress }: ListingCardProps) {
   const { state, dispatch } = useApp();
+  const [imageError, setImageError] = useState(false);
   const isSaved = state.savedListings.includes(listing.id);
 
   const toggleSaved = (e: React.MouseEvent) => {
@@ -25,13 +26,23 @@ export default function ListingCard({ listing, onPress }: ListingCardProps) {
       onClick={onPress}
     >
       <div className="relative">
-        <Image
-          src={listing.images[0]}
-          alt={listing.title}
-          width={300}
-          height={200}
-          className="w-full h-48 object-cover rounded-t-xl"
-        />
+        {!imageError ? (
+          <Image
+            src={listing.images[0]}
+            alt={listing.title}
+            width={300}
+            height={200}
+            className="w-full h-48 object-cover rounded-t-xl"
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <div className="w-full h-48 bg-gradient-to-br from-blue-100 to-blue-200 rounded-t-xl flex items-center justify-center">
+            <div className="text-center text-blue-600">
+              <div className="text-4xl mb-2">🏠</div>
+              <div className="text-sm font-medium">Property Image</div>
+            </div>
+          </div>
+        )}
       </div>
       
       <div className="p-4">
